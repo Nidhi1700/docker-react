@@ -1,0 +1,21 @@
+version: "3"
+services:
+  # 1st Container
+  react-app:
+    build: 
+      context: . # Tells which directory must be considered for building (in this case the current dir is the context)
+      dockerfile: Dockerfile.dev # Specifies the path of the dockerfile 
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules # Bookmarking the nodes_modules folder inside container as we don't have that file/folder inside our current directory
+      - .:/app # Map current directory to /app inside the container 
+  # 2nd Container (For tests)
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    command: ["npm", "run", "test"] # Overriding the defualt command to use the same image as before but to run it as a separate container which will run the tests
